@@ -38,7 +38,7 @@ int main() {
   std::unique_ptr<Solution> soluce = std::make_unique<Solution>();
   std::vector<std::string> list;
 
-  std::ifstream datafile("data.txt");
+  std::ifstream datafile("data1.txt");
 
   if (datafile.is_open()) {
     std::string line;
