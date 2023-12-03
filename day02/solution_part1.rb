@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-data = File.read('data1.txt')
-puts data.lines
+data = File.read('data.txt')
 
 target = { red: 12, green: 13, blue: 14 }
 
