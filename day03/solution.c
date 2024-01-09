@@ -1,6 +1,44 @@
+#include "solution.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
+void add_node(char value, linked_list **head) {
+  linked_list *node = malloc(sizeof(linked_list));
+  linked_list *tmp = *head;
+
+  if (!node)
+    return;
+
+  node->value = value;
+  node->next = NULL;
+
+  if (!tmp) {
+    *head = node;
+    return;
+  }
+
+  while (tmp->next) {
+    if (tmp->value == value)
+      return;
+    tmp = tmp->next;
+  }
+
+  node->next = tmp->next;
+  tmp->next = node;
+}
+
+linked_list *get_symboles(char *buffer) {
+  linked_list *head = NULL;
+
+  for (int i = 0; i < strlen(buffer); i++) {
+    if (buffer[i] != '.' && buffer[i] != '\n' && !is_number(buffer[i])) {
+
+      printf("value: %c\n", buffer[i]);
+      add_node(buffer[i], &head);
+    }
+  }
+
+  return head;
+}
 
 char *read_file(char **av) {
   long size;
@@ -86,63 +124,6 @@ int fill_matrix(char **matrix, char *buffer) {
   return nb_lines;
 }
 
-int get_num_here(char **matrix, int i, int j) {
-  int left_ptr = j;
-  while (left_ptr > 0 && matrix[i][left_ptr] >= 48 && matrix[i][left_ptr] <= 57)
-    left_ptr--;
-  printf("left_ptr: %d\n", left_ptr);
-  return atoi(&matrix[i][left_ptr]);
-}
-
-int get_sum_here(char **matrix, int i, int j) {
-  int sum = 0;
-  int nb = 0;
-  int line_size = strlen(matrix[0]);
-
-  if (i > 0 && j > 0 && matrix[i - 1][j - 1] >= 48 &&
-      matrix[i - 1][j - 1] <= 57) {
-    sum += get_num_here(matrix, i - 1, j - 1);
-  }
-  if (i > 0 && matrix[i - 1][j] >= 48 && matrix[i - 1][j] <= 57) {
-    sum += get_num_here(matrix, i - 1, j);
-  }
-  if (i > 0 && j < line_size - 1 && matrix[i - 1][j + 1] >= 48 &&
-      matrix[i - 1][j + 1] <= 57) {
-    sum += get_num_here(matrix, i - 1, j + 1);
-  }
-  if (j > 0 && matrix[i][j - 1] >= 48 && matrix[i][j - 1] <= 57) {
-    sum += get_num_here(matrix, i, j - 1);
-  }
-  if (j < line_size - 1 && matrix[i][j + 1] >= 48 && matrix[i][j + 1] <= 57) {
-    sum += get_num_here(matrix, i, j + 1);
-  }
-  if (i < line_size - 1 && j > 0 && matrix[i + 1][j - 1] >= 48 &&
-      matrix[i + 1][j - 1] <= 57) {
-    sum += get_num_here(matrix, i + 1, j - 1);
-  }
-  if (i < line_size - 1 && matrix[i + 1][j] >= 48 && matrix[i + 1][j] <= 57) {
-    sum += get_num_here(matrix, i + 1, j);
-  }
-  return sum;
-}
-
-int get_engine_sum(char **matrix, int nb_lines) {
-  int line_size = strlen(matrix[0]);
-  int nb = 0;
-  int sum = 0;
-
-  for (int i = 0; i < nb_lines; i++) {
-    for (int j = 0; j < line_size; j++) {
-      if (matrix[i][j] >= 33 && matrix[i][j] <= 45) {
-        nb = get_sum_here(matrix, i, j);
-        printf("Symbole !!: %c sum next to %d\n", matrix[i][j], nb);
-        sum += nb;
-      }
-    }
-  }
-  return sum;
-}
-
 int main(int ac, char **av) {
   long size;
   char *buffer;
@@ -153,11 +134,16 @@ int main(int ac, char **av) {
   char **matrix = malloc_matrix(buffer);
 
   int nb_lines_filled = fill_matrix(matrix, buffer);
+  linked_list *symboles = get_symboles(buffer);
 
-  int sum = get_engine_sum(matrix, nb_lines_filled);
+  engine_params *params = create_engine_params(matrix, nb_lines_filled,
+                                               strlen(matrix[0]), symboles);
+
+  int sum = get_engine_sum(params);
 
   printf("Sum: %d\n", sum);
 
+  free(params);
   for (int i = 0; i < nb_lines_filled; i++)
     free(matrix[i]);
   free(matrix);
