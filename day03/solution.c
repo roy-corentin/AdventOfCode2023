@@ -1,6 +1,17 @@
 #include "solution.h"
 #include <stdio.h>
 
+void free_linked_list(linked_list *head) {
+  linked_list *tmp = head;
+  linked_list *next = NULL;
+
+  while (tmp) {
+    next = tmp->next;
+    free(tmp);
+    tmp = next;
+  }
+}
+
 void add_node(char value, linked_list **head) {
   linked_list *node = malloc(sizeof(linked_list));
   linked_list *tmp = *head;
@@ -147,6 +158,7 @@ int main(int ac, char **av) {
   for (int i = 0; i < nb_lines_filled; i++)
     free(matrix[i]);
   free(matrix);
+  free_linked_list(symboles);
   free(buffer);
   return 0;
 }
