@@ -136,22 +136,14 @@ int fill_matrix(char **matrix, char *buffer) {
 }
 
 int main(int ac, char **av) {
-  long size;
-  char *buffer;
-  char *file_name;
-  FILE *file;
-
-  buffer = read_file(av);
+  char *buffer = read_file(av);
   char **matrix = malloc_matrix(buffer);
-
   int nb_lines_filled = fill_matrix(matrix, buffer);
   linked_list *symboles = get_symboles(buffer);
-
   engine_params *params = create_engine_params(matrix, nb_lines_filled,
                                                strlen(matrix[0]), symboles);
 
   int sum = get_engine_sum(params);
-
   printf("Sum: %d\n", sum);
 
   free(params);
