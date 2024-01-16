@@ -1,6 +1,6 @@
 #include "solution.h"
 
-void remove_number_from_point(engine_params *params, int x, int y) {
+void remove_number_here(engine_params *params, int x, int y) {
   for (int i = x; i < params->line_size && is_number(params->matrix[y][i]); i++)
     params->matrix[y][i] = '.';
 }
@@ -13,7 +13,7 @@ int get_num_here(engine_params *params, int x, int y) {
 
   int result = atoi(params->matrix[y] + left_ptr);
 
-  remove_number_from_point(params, left_ptr, y);
+  remove_number_here(params, left_ptr, y);
 
   return result;
 }
