@@ -20,6 +20,7 @@ typedef struct engine_params_s {
 int get_engine_sum(engine_params *params);
 int is_symbole(char, linked_list *);
 int is_number(char c);
+int is_in_range(int target, int min, int max);
 
 engine_params *create_engine_params(char **matrix, int nb_lines, int line_size,
                                     linked_list *symboles);

@@ -33,19 +33,15 @@ void add_node(char value, linked_list **head) {
     tmp = tmp->next;
   }
 
-  node->next = tmp->next;
   tmp->next = node;
 }
 
-linked_list *get_symboles(char *buffer) {
+linked_list *find_symboles(char *buffer) {
   linked_list *head = NULL;
 
   for (int i = 0; i < strlen(buffer); i++) {
-    if (buffer[i] != '.' && buffer[i] != '\n' && !is_number(buffer[i])) {
-
-      printf("value: %c\n", buffer[i]);
+    if (buffer[i] != '.' && buffer[i] != '\n' && !is_number(buffer[i]))
       add_node(buffer[i], &head);
-    }
   }
 
   return head;
@@ -67,7 +63,7 @@ char *read_file(char **av) {
 
   fseek(file, 0, SEEK_END);
   size = ftell(file);
-  fseek(file, 0, SEEK_SET);
+  rewind(file);
 
   buffer = malloc(size + 1);
   fread(buffer, 1, size, file);
@@ -87,11 +83,9 @@ int get_line_size(char *buffer) {
 
 int get_nb_lines(char *buffer) {
   int result = 0;
-  for (int i = 0; buffer[i] != '\0'; i++) {
-    if (buffer[i] == '\n') {
+  for (int i = 0; buffer[i] != '\0'; i++)
+    if (buffer[i] == '\n')
       result++;
-    }
-  }
   return result;
 }
 
@@ -139,7 +133,7 @@ int main(int ac, char **av) {
   char *buffer = read_file(av);
   char **matrix = malloc_matrix(buffer);
   int nb_lines_filled = fill_matrix(matrix, buffer);
-  linked_list *symboles = get_symboles(buffer);
+  linked_list *symboles = find_symboles(buffer);
   engine_params *params = create_engine_params(matrix, nb_lines_filled,
                                                strlen(matrix[0]), symboles);
 
