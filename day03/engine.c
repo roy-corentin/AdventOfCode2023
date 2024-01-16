@@ -18,7 +18,7 @@ int get_num_here(engine_params *params, int x, int y) {
   return result;
 }
 
-int get_sum_here(engine_params *params, int y, int x) {
+int get_sum_around_here(engine_params *params, int y, int x) {
   int sum = 0;
   int nb = 0;
   int neighboors_y[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
@@ -43,7 +43,7 @@ int get_engine_sum(engine_params *params) {
   for (int y = 0; y < params->nb_lines; y++)
     for (int x = 0; x < params->line_size; x++)
       if (is_symbole(params->matrix[y][x], params->symboles))
-        sum += get_sum_here(params, y, x);
+        sum += get_sum_around_here(params, y, x);
 
   for (int i = 0; i < params->nb_lines; i++)
     printf("%s\n", params->matrix[i]);

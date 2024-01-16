@@ -1,7 +1,7 @@
 #include "solution.h"
 
 int is_in_range(int target, int min, int max) {
-  return (target - min < max - min);
+  return (target - min <= max - min);
 }
 
 int is_symbole(char target, linked_list *symboles) {
